@@ -53,3 +53,97 @@ Desktop Documents Downloads  HumanFriends.txt  Music  PackAnimals.txt  Pets.txt 
   234  sudo dpkg -r steam-launcher
 
 
+7. Работа с MySQL (Задача выполняется в случае успешного выполнения задачи “Работа с MySQL в Linux. “Установить MySQL на вашу машину”
+
+mysql
+SHOW DATABASES;
+CREATE `Human Friends`;
+USE `Human Friends`;
+
+CREATE TABLE `Pets` (
+    -> `id` INT AUTO_INCREMENT PRIMARY KEY,
+    -> `name` VARCHAR(20),
+    -> `typePets` VARCHAR(20),
+    -> `BirthDate` DATE,
+    -> `Commands` VARCHAR(50)
+    -> );
+
+mysql> CREATE TABLE `PackAnimal`(
+    -> `id` INT AUTO_INCREMENT PRIMARY KEY,
+    -> `name` VARCHAR(20),
+    -> `typePackAnimal` VARCHAR(20),
+    -> `BirthDate` DATE,
+    -> `Commands` VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0,04 sec)
+
+INSERT INTO Pets (name, typePets, BirthDate, Commands)
+    -> VALUES
+    ->   ('Fido', 'Dog', '2020-01-01', 'Sit, Stay, Fetch'),
+    ->   ('Whiskers', 'Cat', '2019-05-15', 'Sit, Scratch, Pounce'),
+    ->   ('Hammy', 'Hamster', '2021-03-10', 'Roll, Hide'),
+    ->   ('Buddy', 'Dog', '2018-12-10', 'Sit, Paw, Bark'),
+    ->   ('Smudge', 'Cat', '2020-02-20', 'Sit, Pounce, Scratch'),
+    ->   ('Peanut', 'Hamster', '2021-08-01', 'Roll, Spin');
+Query OK, 6 rows affected (0,02 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+INSERT INTO Pets (name, typePets, BirthDate, Commands)
+    -> VALUES ('Bella', 'Dog', '2019-11-11', 'Sit, Stay, Roll');
+INSERT INTO Pets (name, typePets, BirthDate, Commands)
+    -> VALUES ('Oliver', 'Cat', '2020-06-30', 'Meow, Scratch, jump');
+
+INSERT INTO PackAnimal (name, typePackAnimal, BirthDate, Commands)
+    -> VALUES
+    ->   ('Thunder', 'Horse', '2015-07-21', 'Trot, Canter, Gallop'),
+    ->   ('Sandy', 'Camel', '2016-11-03', 'Walk, Carry Load'),
+    ->   ('Eeyore', 'Donkey', '2017-09-18', 'Walk, Carry Load, Bray'),
+    ->   ('Storm', 'Horse', '2014-05-05', 'Trot, Canter'),
+    ->   ('Dune', 'Camel', '2018-12-12', 'Walk, Sit'),
+    ->   ('Burro', 'Donkey', '2019-01-23', 'Walk, Bray, Kick'),
+    ->   ('Blaze', 'Horse', '2016-02-29', 'Trot, Jump, Gallop'),
+    ->   ('Sahara', 'Camel', '2015-08-14', 'Walk, Run');
+Query OK, 8 rows affected (0,03 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+
+mysql> DELETE FROM PackAnimal WHERE typePackAnimal = 'Camel';
+
+mysql> SELECT * FROM PackAnimal WHERE typePackAnimal IN ('Horse', 'Donkey');
+
+mysql> INSERT INTO YoungAnimals (id, name, type, BirthDate, Commands)
+    -> SELECT id, name , typePets, BirthDate, Commands FROM Pets 
+    -> WHERE DATEDIFF(NOW(), BirthDate) BETWEEN 365 AND 1095
+    -> UNION
+    -> SELECT id, name, typePackAnimal, BirthDate, Commands FROM PackAnimal
+    -> WHERE DATEDIFF(NOW(), BirthDate) BETWEEN 365 AND 1095;
+Query OK, 2 rows affected (0,02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+mysql> SELECT * FROM YoungAnimals;
++------+--------+---------+------------+------------+
+| id   | name   | type    | BirthDate  | Commands   |
++------+--------+---------+------------+------------+
+|   21 | Hammy  | Hamster | 2021-03-10 | Roll, Hide |
+|   24 | Peanut | Hamster | 2021-08-01 | Roll, Spin |
++------+--------+---------+------------+------------+
+2 rows in set (0,00 sec)
+
+mysql> CREATE TABLE AllAnimals (
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> name VARCHAR(20),
+    -> type VARCHAR(20),
+    -> BirthDate DATE,
+    -> Commands VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0,04 sec)
+
+mysql> INSERT INTO AllAnimals (name, type, BirthDate, Commands, fromTable)
+    -> SELECT name, typePets, BirthDate, Commands, 'fromPets' AS fromTable FROM Pets
+    -> UNION
+    -> SELECT name, typePackAnimal, BirthDate, Commands, 'fromPackAnimal' AS fromTable FROM PackAnimal;
+Query OK, 13 rows affected (0,01 sec)
+
+
+
+
+
+
